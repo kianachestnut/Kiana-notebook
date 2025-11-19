@@ -8,18 +8,16 @@
 setenv MACH hpcc
 setenv CCSMTAG CESM2-release-2.1.0
 
-# 2. 定义不能动的公共路径 (师姐强调的部分)
+# 2. 定义不能动的公共路径
 setenv CCSMROOT /share/home/minghuai/yliang/model/$CCSMTAG
 setenv DATADIR  /share/home/minghuai/yliang/model/CESM_INPUT
 
-# 3. 定义你自己的路径 (需要修改这里确保是你自己的目录)
-# 注意：lxyyy 应该是你的用户名或者目录名，请确认
+# 3. 定义自己的路径
 setenv MY_ROOT  /share/home/ywliu/lxyyy  
 setenv CIME_OUTPUT_ROOT $MY_ROOT/scratch/runout
 
-# 4. 定义Case名字 (建议包含实验特征)
-# NUG代表Nudging实验
-setenv CASE    F2000_Lu2023_NUG
+# 4. 定义Case名字 
+setenv CASE    F2000_1807_NUG
 setenv CASEROOT $MY_ROOT/scratch/cesmrun/$CASE
 setenv RUNDIR   $CIME_OUTPUT_ROOT/$CASE
 
@@ -64,7 +62,7 @@ cd $CASEROOT
 
 # 设置运行时间
 # 文章中NUG实验跑了1年 (2018年)。这里先跑5天测试能不能通。
-./xmlchange --file env_run.xml --id RUN_STARTDATE --val '2018-01-01'
+./xmlchange --file env_run.xml --id RUN_STARTDATE --val '2018-07-01'
 ./xmlchange --file env_run.xml --id STOP_N        --val '5'
 ./xmlchange --file env_run.xml --id STOP_OPTION   --val 'ndays'
 
@@ -118,7 +116,7 @@ cat <<EOF >! user_nl_cam
 
 Nudge_Model = .true.
 Nudge_Path  = '/share/home/minghuai/Liuym/DATA/MERRA2/CESM/0.9x1.25_32L/'
-Nudge_File_Template = '/share/home/ywliu/yhzhang/data/Nudging_filenames/filenames_2000-2024_365.txt'
+Nudge_File_Template = '/share/home/ywliu/lxyyy/data/Nudging_filenames/filenames_2000-2024_365.txt'
 ! 注意：你需要确认上面这个txt文件里是否包含2018年的文件名
 
 ndgs_tau    = 6, 6, 6, 6   ! 松弛时间尺度 6小时
@@ -133,7 +131,7 @@ avgflag_pertape = 'A'     ! A:平均态
 nhtfrq          = -24     ! -24: 输出日平均
 mfilt           = 30      ! 一个文件存30个时次
 
-! 输出变量列表 (根据文章图表需求添加)
+! 输出变量列表 (总降水率，温度，U，V，10米风速，比湿，位势高度，地表气压，可见光波段，黑碳 AOD，颗粒有机物 AOD，沙尘 AOD，硫酸盐 AOD，总云量，云滴数浓度，大气层顶净短波辐射通量，大气层顶净长波辐射通量)
 fincl1 = 'PRECT','T','U','V','U10','Q','Z3','PS',
          'AODVIS','AODDUST','AODBC','AODPOM','AODSO4',
          'CLDTOT','CDNUMC','FSNT','FLNT'
