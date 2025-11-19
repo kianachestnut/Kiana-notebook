@@ -17,7 +17,7 @@ setenv MY_ROOT  /share/home/ywliu/lxyyy
 setenv CIME_OUTPUT_ROOT $MY_ROOT/scratch/runout
 
 # 4. 定义Case名字 
-setenv CASE    F2000_1807_NUG
+setenv CASE    NUG_1807_CTL
 setenv CASEROOT $MY_ROOT/scratch/cesmrun/$CASE
 setenv RUNDIR   $CIME_OUTPUT_ROOT/$CASE
 
