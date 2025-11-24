@@ -1,0 +1,63 @@
+! user_nl_cam for fire emission studies
+! Based on actual variables in F2000climo output
+
+avgflag_pertape = 'A'
+nhtfrq          = -24
+mfilt           = 31
+
+! All variables below are VERIFIED to exist in F2000climo output
+fincl1 = 
+! Fire emission fluxes - to verify QFED is working
+         'SFbc_a4','SFpom_a4','SFbc_a1','SFpom_a1',
+         'SFso4_a1','SFso4_a2','SFSO2','SFH2SO4',
+         'SFnum_a1','SFnum_a2','SFnum_a4',
+         
+! Aerosol concentrations - 3D
+         'bc_a4','pom_a4','bc_a1','pom_a1',
+         'so4_a1','so4_a2',
+         'dst_a1','dst_a2','dst_a3',
+         'num_a1','num_a2','num_a4',
+         
+! Surface concentrations
+         'bc_a4_SRF','pom_a4_SRF','bc_a1_SRF','pom_a1_SRF',
+         'so4_a1_SRF','so4_a2_SRF',
+         'dst_a1_SRF','dst_a2_SRF','dst_a3_SRF',
+         
+! Aerosol optical properties
+         'AODPOM','AODSOA','AODDUST','AODDUST1','AODDUST3',
+         'AEROD_v','AODVIS',
+         
+! PM2.5 (3D variable!)
+         'PM25',
+         
+! Trace gases
+         'SO2','SO2_SRF','DMS','DMS_SRF',
+         'H2O2','H2SO4','SOAG',
+         
+! Radiation fluxes
+         'FSNT','FSNTC','FLNT','FLNTC',
+         'FSDS','FSDSC','FLDS','FLNS','FLNSC',
+         'SWCF','LWCF',
+         
+! Clouds
+         'CLDTOT','CLDLOW','CLDMED','CLDHGH',
+         'CDNUMC','CLOUD','CLDLIQ','CLDICE',
+         
+! Precipitation
+         'PRECT','PRECC','PRECL','PRECSC','PRECSL',
+         
+! Meteorology - 3D
+         'T','U','V','OMEGA','Q','RELHUM',
+         
+! Meteorology - surface
+         'PS','PSL','TS','TREFHT','QREFHT',
+         'UBOT','VBOT','U10',
+         'PBLH','LHFLX','SHFLX',
+         
+! Additional useful variables
+         'LANDFRAC','OCNFRAC','ICEFRAC'
+
+&cam_initfiles_nl
+ bnd_topo = '/share/home/minghuai/yliang/model/CESM_INPUT/atm/cam/topo/fv_0.9x1.25_nc3000_Nsw042_Nrs008_Co060_Fi001_ZR_sgh30_24km_GRNL_c170103.nc'
+ ncdata = '/share/home/minghuai/yliang/model/CESM_INPUT/atm/cam/inic/fv/f.e20.FCSD.f09_f09_mg17.cesm2.1-exp002.001.cam.i.2005-01-01-00000_c180801_32L.nc'
+/

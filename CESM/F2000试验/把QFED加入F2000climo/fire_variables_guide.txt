@@ -1,0 +1,135 @@
+! ========================================================
+! Recommended fincl variables for fire emission studies
+! ========================================================
+
+! 基础配置 - 日均输出
+avgflag_pertape = 'A'
+nhtfrq          = -24    ! Daily output
+mfilt           = 31     ! 31 days for monthly simulation
+
+! ========================================================
+! fincl1 - 每日输出的关键变量
+! ========================================================
+fincl1 = 
+! === 火灾排放通量 ===
+         'SFBC','SFPOM','SFSO2','SFSO4','SFCO',
+         'bc_a4SF','pom_a4SF',
+         
+! === 气溶胶浓度 ===
+         'bc_a4','pom_a4','so4_a1','so4_a2',
+         'bc_a4_SRF','pom_a4_SRF',
+         
+! === 气溶胶负荷 ===
+         'BURDENbc_a4','BURDENpom_a4','BURDENSO4',
+         
+! === 气溶胶光学特性 ===
+         'AOD','AODABS','AODUV',
+         'AODBC','AODPOM','AODSOA','AODSO4','AODDUST',
+         
+! === PM2.5 ===
+         'PM25','PM10',
+         
+! === 痕量气体 ===
+         'CO','CO2','SO2','O3','NO','NO2',
+         
+! === 辐射通量 ===
+         'FSNT','FSNTC','FSDS','FSDSC',
+         'FLNT','FLNTC','FLDS',
+         'SWCF','LWCF',
+         
+! === 云 ===
+         'CLDTOT','CLDLOW','CLDMED','CLDHGH',
+         'CDNUMC',
+         
+! === 降水 ===
+         'PRECT','PRECC','PRECL',
+         
+! === 气象场 ===
+         'T','PS','PSL','TS','TREFHT',
+         'U','V','UBOT','VBOT','OMEGA',
+         'Q','RELHUM','QREFHT'
+
+! ========================================================
+! fincl2 - 3小时输出 (可选,用于分析日变化)
+! ========================================================
+! avgflag_pertape(2) = 'A'
+! nhtfrq(2)          = -3     ! 3-hourly
+! mfilt(2)           = 248    ! 31 days * 8 per day
+
+! fincl2 = 'bc_a4_SRF','pom_a4_SRF','PM25',
+!          'AODBC','AODPOM','AOD',
+!          'PRECT','TREFHT',
+!          'UBOT','VBOT'
+
+! ========================================================
+! fincl3 - 月均输出 (用于长期模拟)
+! ========================================================
+! avgflag_pertape(3) = 'A'
+! nhtfrq(3)          = 0      ! Monthly average
+! mfilt(3)           = 1
+
+! fincl3 = 'all variables you want monthly average'
+
+
+! ========================================================
+! 简化版 - 如果担心输出文件太大
+! ========================================================
+
+! fincl1_minimal = 
+!          ! 核心火灾指标
+!          'SFBC','SFPOM','SFSO2',
+!          'bc_a4','pom_a4',
+!          'AODBC','AODPOM','AOD',
+!          'PM25',
+!          ! 基本气象
+!          'PRECT','TREFHT','PS',
+!          'UBOT','VBOT',
+!          ! 辐射
+!          'FSNT','FLNT','SWCF'
+
+
+! ========================================================
+! 高级选项 - 3D变量 (用于垂直分布分析)
+! ========================================================
+
+! 如果需要3D分布,在fincl1中添加:
+! fincl1_3D = 'bc_a4','pom_a4','so4_a1','so4_a2',
+!             'T','U','V','OMEGA','Q','CLOUD',
+!             'extinct_sw_inp','extinct_lw_bnd7',  ! 消光系数
+!             'MASS','CLDLIQ','CLDICE'              ! 云微物理
+
+
+! ========================================================
+! 注意事项
+! ========================================================
+! 1. 输出变量越多,输出文件越大
+!    - 日均全部变量: ~10-50 GB/月
+!    - 日均核心变量: ~5-10 GB/月
+!
+! 2. 3D变量会显著增加文件大小
+!    - 每个3D变量增加 ~30倍空间
+!
+! 3. 检查磁盘空间:
+!    df -h /share/home/ywliu/lxyyy/scratch/runout/
+!
+! 4. 常用的history file设置:
+!    nhtfrq = -24  → 日均
+!    nhtfrq = -3   → 3小时
+!    nhtfrq = -1   → 逐小时
+!    nhtfrq = 0    → 月均
+!
+!    mfilt = 输出文件中包含的时间步数
+!    例如: nhtfrq=-24, mfilt=31 → 一个文件包含31天
+
+
+! ========================================================
+! 对比试验建议
+! ========================================================
+! Control: 无QFED,背景排放
+!   → 输出所有上述变量
+!
+! QFED: 加入QFED火灾排放  
+!   → 输出完全相同的变量
+!
+! 分析: QFED - Control = 火灾影响
+!   → bc_a4, AODBC, PM25, SWCF, PRECT 等的差异
