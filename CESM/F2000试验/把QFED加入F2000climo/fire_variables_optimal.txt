@@ -1,0 +1,85 @@
+#!/bin/csh -fx
+# Optimized variable list for fire emission research
+# Based on F2000climo with QFED
+
+####--------------------------
+## User namelist for CAM6
+####--------------------------
+
+cat <<EOF > user_nl_cam
+
+! ===== Output Configuration =====
+avgflag_pertape = 'A','A'  
+nhtfrq = -24, -24          ! Both daily output
+mfilt = 31, 31             ! 31 days for each
+
+! ===== History File 1: Core Fire Variables =====
+fincl1 = 
+! Fire emission tracers (primary species from QFED)
+         'bc_a4','pom_a4',                    ! BC and POM from fire
+         'CO','SO2','NO',                     ! Fire gases
+! Emission fluxes
+         'SFBC','SFPOM','SFCO','SFSO2','SFNO', ! Surface fluxes
+         'bc_a4SF','pom_a4SF',                ! Modal surface fluxes
+! Aerosol optical properties  
+         'AODBC','AODPOM','AODABS','AODVIS',  ! AOD diagnostics
+         'BURDENBC','BURDENPOM',              ! Column burdens
+! Basic meteorology
+         'T','Q','U','V','OMEGA',             ! 3D fields
+         'PS','PSL','TREFHT',                 ! Surface fields
+         'UBOT','VBOT','U10',                 ! Wind diagnostics
+         'PRECT','PRECC','PRECL',             ! Precipitation
+         'CLDTOT',                            ! Total cloud
+! Radiation
+         'FLNT','FSNT','FLNS','FSNS',         ! All-sky radiation
+         'FLNTC','FSNTC','FLNSC','FSNSC',     ! Clear-sky radiation
+         'LWCF','SWCF',                       ! Cloud forcing
+         'SOLIN'                              ! Solar input
+
+! ===== History File 2: Detailed Aerosol Budget =====
+fincl2 = 
+! Multi-modal aerosols
+         'bc_a1','bc_a4',                     ! BC in different modes
+         'pom_a1','pom_a4',                   ! POM in different modes
+         'SO4_a1','SO4_a2','SO4_a3',          ! Sulfate
+! Number concentrations
+         'num_a1','num_a2','num_a4',          ! Modal number
+         'bc_a1_num','bc_a4_num',             ! BC number
+! Additional gases
+         'CO2','NH3','CH4',                   ! Other fire gases
+         'CH2O','CH3CHO',                     ! VOCs from fire
+! Deposition
+         'bc_a4DDF','pom_a4DDF',              ! Dry deposition
+         'bc_a4SFWET','pom_a4SFWET',          ! Wet deposition
+! Extended aerosol optics
+         'AODSOA','AODSO4','AODDUST',         ! Other aerosol AOD
+         'AODUV','AODNIR',                    ! Multi-wavelength AOD
+! Additional met variables
+         'RELHUM','PBLH',                     ! Boundary layer
+         'CLDLOW','CLDMED','CLDHGH',          ! Cloud levels
+         'PRECSC','PRECSL'                    ! Snow precipitation
+
+! ===== QFED Fire Emissions =====
+srf_emis_specifier = 
+         'bc_a4  -> /work13/zzsun/lxy_data/QEFD/qfed2.emis_bc.061.%y%m%d.nc4:biomass',
+         'pom_a4 -> /work13/zzsun/lxy_data/QEFD/qfed2.emis_oc.061.%y%m%d.nc4:biomass',
+         'SO2    -> /work13/zzsun/lxy_data/QEFD/qfed2.emis_so2.061.%y%m%d.nc4:biomass',
+         'CO     -> /work13/zzsun/lxy_data/QEFD/qfed2.emis_co.061.%y%m%d.nc4:biomass',
+         'NO     -> /work13/zzsun/lxy_data/QEFD/qfed2.emis_no.061.%y%m%d.nc4:biomass'
+
+&cam_initfiles_nl
+ bnd_topo = '/share/home/minghuai/yliang/model/CESM_INPUT/atm/cam/topo/fv_0.9x1.25_nc3000_Nsw042_Nrs008_Co060_Fi001_ZR_sgh30_24km_GRNL_c170103.nc'
+ ncdata = '/share/home/minghuai/yliang/model/CESM_INPUT/atm/cam/inic/fv/f.e20.FCSD.f09_f09_mg17.cesm2.1-exp002.001.cam.i.2005-01-01-00000_c180801_32L.nc'
+/
+
+EOF
+
+# ===== Notes =====
+# History file 1 (.h0.): Essential fire impact diagnostics
+# History file 2 (.h1.): Detailed aerosol process analysis
+# 
+# Output files will be:
+# - *.cam.h0.*.nc : Core fire variables (smaller, ~200-300 MB/month)
+# - *.cam.h1.*.nc : Detailed aerosol budget (larger, ~400-500 MB/month)
+#
+# For a quick test, you can comment out fincl2 and avgflag_pertape(2), nhtfrq(2), mfilt(2)
